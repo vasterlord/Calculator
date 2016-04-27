@@ -3,6 +3,7 @@ package gmailivanrudyk1996.com.calculator;
 
 import android.app.Fragment;
 import android.content.Context;
+
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,12 +18,12 @@ import java.util.ArrayList;
 
 public class FragmentCalc extends Fragment {
     TextView calcDialogDisplay;
-    Button allClear, seven, eight, nine, division, four, five, six, multiply, one, two, three, subtract, decimal, zero, equals, addition;
+    Button allClear, seven, eight, nine, division, four, five, six, multiply, one, two, three, subtract, zero, equals, addition;
     private String PREF_NAME = "pref";
 
     ArrayList<Float> result = new ArrayList<Float>();
-
     SharedPreferences sharedPreferences;
+
 
 
     float number1;
@@ -40,6 +41,14 @@ public class FragmentCalc extends Fragment {
     final static int DONT_CLEAR = 0;
     int clearCalcDisplay = 0;
 
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        calcDialogDisplay.setText(loadPref());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,6 +80,33 @@ public class FragmentCalc extends Fragment {
     }
 
 
+
+    private void savePref(String sRes){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(PREF_NAME, sRes);
+        editor.apply();
+    }
+
+    private String loadPref(){
+        sharedPreferences = getActivity().getSharedPreferences(PREF_NAME ,Context.MODE_PRIVATE);
+        String saveText = sharedPreferences.getString(PREF_NAME, "");
+        return saveText;
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        savePref(calcDialogDisplay.getText().toString());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        savePref(calcDialogDisplay.getText().toString());
+    }
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
     private void operandListeners() {
         seven.setOnClickListener(new View.OnClickListener() {
 
